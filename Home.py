@@ -7,7 +7,7 @@ st.set_page_config(page_title='Home', page_icon='https://encrypted-tbn0.gstatic.
 
 # Configura título e subtítulo da página
 st.title('Tech Challegenge FIAP - Fase 4')
-st.subheader('Uma análise da base histórica do IPEA, com o objetivo de idenitifcar _insights_ relevantes para tomada de decisões e desenvolver um modelo de Machine Learning para previsão diária do custo do barril de petróleo.')
+st.write('Uma análise da base histórica do IPEA, com o objetivo de idenitifcar _insights_ relevantes para tomada de decisões e desenvolver um modelo de Machine Learning para previsão diária do custo do barril de petróleo.')
 
 # Inserção da imagem da home
 st.image('img/home_image.jpg', caption=None, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
