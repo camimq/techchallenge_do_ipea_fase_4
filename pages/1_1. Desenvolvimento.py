@@ -1,3 +1,7 @@
+# Importante:
+# A documentação das funções presentes neste arquivo estão no README.md
+
+# Início das importações de bibliotecas e dependências para rodar o projeto
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,13 +18,15 @@ from sklearn.preprocessing import MinMaxScaler
 from statsmodels.tsa.stattools import adfuller
 import streamlit as st
 
-
 import tensorflow as tf
-from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator
-from tensorflow.keras.metrics import MeanSquaredError
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
-from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator # type: ignore
+from tensorflow.keras.metrics import MeanSquaredError # type: ignore
+from tensorflow.keras.models import Sequential # type: ignore
+from tensorflow.keras.layers import LSTM, Dense # type: ignore
+from tensorflow.keras.models import load_model # type: ignore
+# Fim das importações de bibliotecas e dependências para rodar o projeto
+
+# Início das definições de funções que serão utilizadas no projeto
 
 def get_data():
     start_date = '2022-01-01'
@@ -31,7 +37,6 @@ def get_data():
     alpha = 0.09  
     df['Smoothed_Close'] = df['Close'].ewm(alpha=alpha, adjust=False).mean()
     return df
-
 
 def plot_serie_suavizada(df):
     fig, ax = plt.subplots(figsize=(12, 6))
@@ -102,7 +107,7 @@ def get_features(df, model):
     forecast = predict(num_prediction, model, lock_back) #resultado de novos dias
     forecast_dates = predict_dates(num_prediction)
     return close_data, close_test, close_train, date_test, date_train, forecast_dates, forecast, scaler
-   
+
 def exibir_metricas(mse, mape, rmse_value):
     st.write(f"MSE: {mse[0]}")
     st.write(f"MAPE: {mape:.2f}%")
@@ -152,8 +157,6 @@ def predict(num_prediction, model, look_back):
 
     return prediction_list
 
-# Função para gerar as datas dos próximos 'num_prediction' dias
-# Assume que o DataFrame 'df' possui uma coluna 'Date' contendo as datas
 def predict_dates(num_prediction):
     last_date = df['Date'].values[-1]
     prediction_dates = pd.date_range(last_date, periods=num_prediction+1).tolist()
@@ -180,9 +183,8 @@ def plot_forecast(date_test,close_test,forecast_dates,forecast):
         )
     fig = go.Figure(data=[trace1, trace2], layout=layout)
     st.plotly_chart(fig)
-   
-def teste(df, forecast_dates, forecast, scaler):
 
+def teste(df, forecast_dates, forecast, scaler):
     forecast = forecast.reshape(-1, 1) #reshape para array
     forecast = scaler.inverse_transform(forecast)
     df = pd.DataFrame(df)
@@ -229,9 +231,12 @@ def plot_predict(df):
     fig = go.Figure(data=plot_data, layout=plot_layout)
     st.plotly_chart(fig)
 
-# Configura atributos da página
+# Fim das definições de funções que serão utilizadas no projeto
+
+# Configuração dos atributos da página
 st.set_page_config(page_title='Desenvolvimento', page_icon='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTADYDWw-Wdk19SHqSlthiAilmWGH6NfW5FVg&s', layout="centered", initial_sidebar_state="auto", menu_items=None)
 
+# Início do conteúdo da página
 st.title('1. Desenvolvimento')
 st.write('''
           Nesta seção, serão apresentados os detalhes do desenvolvimento do projeto, desde a coleta dos dados, até a implementação do modelo de _Machine Learning_.
@@ -245,9 +250,7 @@ st.write('''
           5. **Deploy do Projeto** 
          ''')
 
-
 #------------------------VARIAVEIS GLOBAIS------------------------------------#
-
 
 #df = get_data()
 #try:
@@ -262,15 +265,16 @@ look_back = 10
 # Configura tabs da página
 tab1, tab2, tab3, tab4, tab5 = st.tabs(['Sore os Dados', 'Análise Exploratória de Dados', 'Dashboard', 'Modelo de Machine Learning', 'Deploy do Projeto'])
 
+# Conteúdo da tab Sobre Dados
 with tab1:
-  st.title('Coleta de Dados')
-  col1, col2 = st.columns(2)
-  with col1:
+    st.title('Coleta de Dados')
+    col1, col2 = st.columns(2)
+    with col1:
     # Inserção da imagem da home
-    st.image('img/tabela_base_dados.png', caption=None, width=None, use_column_width='always', clamp=False, channels="RGB", output_format="auto")
+        st.image('img/tabela_base_dados.png', caption=None, width=None, use_column_width='always', clamp=False, channels="RGB", output_format="auto")
   
-  with col2:
-    st.write('''
+    with col2:
+        st.write('''
               A base utilizada para análise e desenvolvimento do modelo de ML, foram coletadas diretamenta do [_site_ do IPEA](https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos/serie-historica-de-precos-de-combustiveis).
             
               Para que seja possível uma análise assertiva e que o mode de _Machine Learning_ seja eficiente, é necessário garantir uma boa quantidade de dados históricos, para que seja possível identificar padrões e tendências e treinar o modelo de forma adequada.
@@ -280,35 +284,41 @@ with tab1:
               ## Método de coleta dos dados
               Para a coleta dos dados disponibilizados dentro da base do IPEA, fizemos o _download_ de todos os arquivos (total de 10 planilhas) e realizamos a junção de todas as planilhas em um único _dataset_,
            ''')
-
-  st.write('''
-            utilizando **PostgreSQL** e **Knime**, conforme passo a passo abaixo descrito abaixo:
+    st.write('''
+            utilizando **PostgreSQL** e **Knime**, conforme passo a passo descrito abaixo:
             
             **1. Download dos arquivos:**
             
             Dentro do [_site_ do IPEA](https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos/serie-historica-de-precos-de-combustiveis), as bases estão separadas por semestre, desta forma, cada ano, possui dois arquivos; um para o primeiro semestre e outro para o segundo semestre, disponibilizadas em formato `.csv`.
           ''')
-  st.image('img/download_base_dados.png', caption=None, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
-  st.write('''
+    st.image('img/download_base_dados.png', caption=None, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+    st.write('''
           **2. Concatenação dos arquivos com Knime:**
           
-          **3. Importação dos arquivos para o PostgreSQL:**
-          
-          
-          
-          
-          
-          
-          ''')
+            Os arquivos foram transportados para dentro do Knime, onde foi feita a concatenação dos arquivos, a exclusão da coluna `valor_compra` e a exportação do arquivo final em formato `.csv`.
+        ''')
+    st.image('img/knime_1.png', caption="Print do schema da concatenação das tabelas no Knime.", width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+    st.write('''
+        **3. Importação dos arquivos para o PostgreSQL:**
+        
+        O arquivo final foi importado para o PostgreSQL, onde foi feita a criação de uma tabela para armazenar os dados. A tabela resultado deste processo, é a que será utilizada para a análise exploratória e treinamento do modelo de _Machine Learning_.
+        ''')
+    st.image('img/postgres.png', caption="Print da tabela de dados exportada para o Postgres.", width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
 
+st.write('---')
 
+# Conteúdo da tab Análise Exploratória de Dados         
 with tab2:
   st.title('Análise Exploratória de Dados')
+  st.write('''
+           TESTE
+           ''')
     
-  
+# Conteúdo da tab Dashboard 
 with tab3:
   st.title('Dashboard')
 
+# Conteúdo da tab Modelo de Machine Learning
 with tab4:
   st.title('Modelo de Machine Learning')
   df = get_data()
@@ -328,10 +338,7 @@ with tab4:
     df_results = teste(df, forecast_dates, forecast, scaler)
     plot_predict(df_results)
 
-
-
-
-
+# Conteúdo da tab Deploy do Projeto
 with tab5:
   st.title('Deploy do Projeto')
   #plot_prediction(date_train, date_test, close_train, close_test, model, test_generator)
@@ -342,3 +349,5 @@ with tab5:
   #  plot_forecast(date_test,close_data,forecast_dates,forecast)
   #except:
   #  st.title('O modelo ainda não foi treinando, vá até a aba de modelo e faça o treinamento')
+
+# Fim do conteúdo da página
