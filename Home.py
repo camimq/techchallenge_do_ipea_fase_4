@@ -42,7 +42,7 @@ with tab2:
               **Desta forma, o objetivo do projeto é:**
               
               - Criar um _dashboard_ interativo com ferramenta de livre escolha do grupo.
-              - O _dashboard_ deve fazer parte de um _storytelling_ que traga _insights_ relevantes sobre a variação do preço do petróleo, como situalções geopolíticas, crises econômicas, demanda global por energia etc. **É obrigado apresentar, pelo menos, 4 _insights_.
+              - O _dashboard_ deve fazer parte de um _storytelling_ que traga _insights_ relevantes sobre a variação do preço do petróleo, como situalções geopolíticas, crises econômicas, demanda global por energia etc. **É obrigado apresentar, pelo menos, 4 _insights_**.
               - Criar um modelo de _Machine Learning_ que faça a previsão do preço do petróleo diariamente. Esse modelo deve estar contemplado em seu _storytelling_ e deve conter o código desenvolvido, analisando as performances do modelo.
               - Criar um plano para fazer o _deploy_ em produção do modelo, com as ferramentas que são necessárias.
               - Faça um MVP do modelo desenvolvido em produção, utilizando o **Streamlit**.
