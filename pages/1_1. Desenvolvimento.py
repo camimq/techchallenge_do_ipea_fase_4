@@ -4,19 +4,19 @@
 # Início das importações de bibliotecas e dependências para rodar o projeto
 import streamlit as st
 import pandas as pd
+import pandas.io.sql as sqlio
 import numpy as np
+import psycopg2 as ps
 import sys
+import seaborn as sns
 
 import yfinance as yf
-import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import plotly.graph_objects as go
-import numpy as np
 import plotly.express as px
 from sklearn.preprocessing import MinMaxScaler
 from statsmodels.tsa.stattools import adfuller
-import streamlit as st
 
 import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator # type: ignore
@@ -233,8 +233,48 @@ def plot_predict(df):
 
 # Fim das definições de funções que serão utilizadas no projeto
 
+### Início da Análise exploratória de dados
+
+# cria o DataFrame
+df_anp = pd.read_csv (r'c:/Users/Elitebook/OneDrive/Desktop/web dev/techchallenge_do_ipea_fase_4/bases/df_anp.csv')
+
+# Valores mínimos, máximos e médios dos produtos por ano
+df_anp_valor = df_anp[['ano', 'produto', 'valor_venda']].groupby(['produto', 'ano']).agg(['min', 'max', 'mean']).round(2)
+
+# Valores mínimos, máximos e médios dos produtos por ano - recorte por Estado
+df_anp_valor_estado = df_anp[['ano', 'estado', 'produto', 'valor_venda']].groupby(['produto', 'ano', 'estado']).agg(['min', 'max', 'mean']).round(2)
+
+# separando o dataset por tipo de produto
+gasolina_aditivada = df_anp[df_anp['produto'] == 'GASOLINA ADITIVADA']
+gasolina = df_anp[df_anp['produto'] == 'GASOLINA']
+diesel_s10 = df_anp[df_anp['produto'] == 'DIESEL S10']
+diesel = df_anp[df_anp['produto'] == 'DIESEL']
+etanol = df_anp[df_anp['produto'] == 'ETANOL']
+gnv = df_anp[df_anp['produto'] == 'GNV']
+
+# função para auxiliar na criação de gráficos - Análise exploratória de dados
+def plotar_boxplot_2V(titulo, labelx, labely, x, y, dataset):
+  fig = plt.figure(figsize=(6,6))
+  sns.set_palette('Accent')
+  sns.set_style('darkgrid')
+  ax = sns.boxplot(x = x, y = y, data = dataset)
+  ax.figure.set_size_inches(12, 6)
+  ax.set_title(titulo, loc = 'left', fontsize = 18)
+  ax.set_xlabel(labelx, fontsize = 14)
+  ax.set_ylabel(labely, fontsize = 14)
+
+# funação para auxiliar na criação de gráficos - Análise exploratória de dados 
+def plotar_boxplot_geral(y, dataset):
+  fig = plt.figure(figsize=(12, 6))
+  ax = sns.boxplot(y=y, data=dataset)
+  ax.figure.set_size_inches(4, 4)
+  plt.show()
+
+### Fim da Análise Exploratória de Dados
+
 # Configuração dos atributos da página
 st.set_page_config(page_title='Desenvolvimento', page_icon='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTADYDWw-Wdk19SHqSlthiAilmWGH6NfW5FVg&s', layout="centered", initial_sidebar_state="auto", menu_items=None)
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Início do conteúdo da página
 st.title('1. Desenvolvimento')
@@ -309,11 +349,40 @@ st.write('---')
 
 # Conteúdo da tab Análise Exploratória de Dados         
 with tab2:
-  st.title('Análise Exploratória de Dados')
   st.write('''
-           TESTE
+           À partir da bases de dados coletada, é possível determinar algumas informações relevantes para a análise exploratória de dados, conforme descrito abaixo:
+           
+           - **Produtos listados na base:** Diesel S10, Gasolina, Gasolina Aditivada, Etanol, Diesel e GNV e GLP.
+           - **Período dos dados:** 2019 à 2023.
+           
+           # Valores mínimos, máximos e médios dos produtos por ano**
            ''')
-    
+  st.dataframe(df_anp_valor)
+  st.write('# Valores mínimos, máximos e médios dos produtos por ano (recorte por Estado)')
+  st.dataframe(df_anp_valor_estado)
+  st.write('# Estatística básica de cada produto')
+  
+  st.write('## Gasolina Aditivada')
+  st.dataframe(gasolina_aditivada.valor_venda.describe().round(2))
+  
+  st.write('## Gasolina')
+  st.dataframe(gasolina.valor_venda.describe().round(2))
+  
+  st.write('## Diesel S10')
+  st.dataframe(diesel_s10.valor_venda.describe().round(2))
+  
+  st.write('## Diesel')
+  st.dataframe(diesel.valor_venda.describe().round(2))
+  
+  st.write('## Diesel')
+  st.dataframe(diesel.valor_venda.describe().round(2))
+  
+  st.write('## Etanol')
+  st.dataframe(etanol.valor_venda.describe().round(2))
+
+  st.write('## GNV')
+  st.dataframe(gnv.valor_venda.describe().round(2))
+  
 # Conteúdo da tab Dashboard 
 with tab3:
   st.title('Dashboard')
