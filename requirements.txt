@@ -3,5 +3,4 @@ plotly
 streamlit
 yfinance
 numpy
-psycopg2
 matplotlib.pyplot
