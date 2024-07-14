@@ -238,6 +238,8 @@ def plot_predict(df):
 # cria o DataFrame
 df_anp = pd.read_csv (r'c:/Users/Elitebook/OneDrive/Desktop/web dev/techchallenge_do_ipea_fase_4/bases/df_anp.csv')
 
+df_anp_revenda = pd.read_csv (r'c:\Users\Elitebook\OneDrive\Desktop\web dev\techchallenge_do_ipea_fase_4\bases\df_anp_revenda.csv')
+
 # Valores mínimos, máximos e médios dos produtos por ano
 df_anp_valor = df_anp[['ano', 'produto', 'valor_venda']].groupby(['produto', 'ano']).agg(['min', 'max', 'mean']).round(2)
 
@@ -251,17 +253,6 @@ diesel_s10 = df_anp[df_anp['produto'] == 'DIESEL S10']
 diesel = df_anp[df_anp['produto'] == 'DIESEL']
 etanol = df_anp[df_anp['produto'] == 'ETANOL']
 gnv = df_anp[df_anp['produto'] == 'GNV']
-
-# função para auxiliar na criação de gráficos - Análise exploratória de dados
-def plotar_boxplot_2V(titulo, labelx, labely, x, y, dataset):
-  fig = plt.figure(figsize=(6,6))
-  sns.set_palette('Accent')
-  sns.set_style('darkgrid')
-  ax = sns.boxplot(x = x, y = y, data = dataset)
-  ax.figure.set_size_inches(12, 6)
-  ax.set_title(titulo, loc = 'left', fontsize = 18)
-  ax.set_xlabel(labelx, fontsize = 14)
-  ax.set_ylabel(labely, fontsize = 14)
 
 # funação para auxiliar na criação de gráficos - Análise exploratória de dados 
 def plotar_boxplot_geral(y, dataset):
@@ -352,37 +343,141 @@ with tab2:
   st.write('''
            À partir da bases de dados coletada, é possível determinar algumas informações relevantes para a análise exploratória de dados, conforme descrito abaixo:
            
-           - **Produtos listados na base:** Diesel S10, Gasolina, Gasolina Aditivada, Etanol, Diesel e GNV e GLP.
+           - **Produtos listados na base:** Diesel, Diesel S10, Etanol, Gasolina, Gasolina Aditivada e GNV.
            - **Período dos dados:** 2019 à 2023.
-           
-           # Valores mínimos, máximos e médios dos produtos por ano**
            ''')
+  st.write('## Valores mínimos, máximos e médios dos produtos por ano')
   st.dataframe(df_anp_valor)
-  st.write('# Valores mínimos, máximos e médios dos produtos por ano (recorte por Estado)')
+  st.write('## Valores mínimos, máximos e médios dos produtos por ano (recorte por Estado)')
   st.dataframe(df_anp_valor_estado)
-  st.write('# Estatística básica de cada produto')
+  st.write('## Estatística básica de cada produto')
   
-  st.write('## Gasolina Aditivada')
-  st.dataframe(gasolina_aditivada.valor_venda.describe().round(2))
+  col1, col2 = st.columns(2)
+  col3, col4 = st.columns(2)
+  col5, col6 = st.columns(2)
+  col7, col8 = st.columns(2)
+  col9, col10 = st.columns(2)
+  col11, col12 = st.columns(2)
+       
+  with col1:
+   st.write('### Gasolina Aditivada')
+   st.dataframe(gasolina_aditivada.valor_venda.describe().round(2))
+  with col2:
+   # variável para plotar box 
+   fig_boxplot_gasolina_aditivada = px.box(gasolina_aditivada, y='valor_venda', labels={'valor_venda': 'Valor de Venda'})
+   st.plotly_chart(fig_boxplot_gasolina_aditivada)
+  with col3:
+   st.write('### Gasolina')
+   st.dataframe(gasolina.valor_venda.describe().round(2))
+  with col4:
+   # variável para plotar box 
+   fig_boxplot_gasolina = px.box(gasolina, y='valor_venda', labels={'valor_venda': 'Valor de Venda'})
+   st.plotly_chart(fig_boxplot_gasolina)  
+  with col5:
+   st.write('### Diesel S10')
+   st.dataframe(diesel_s10.valor_venda.describe().round(2))
+  with col6:  
+   # variável para plotar box 
+   fig_boxplot_diesel_s10 = px.box(diesel_s10, y='valor_venda', labels={'valor_venda': 'Valor de Venda'})
+   st.plotly_chart(fig_boxplot_diesel_s10)
+  with col7:
+   st.write('### Diesel')
+   st.dataframe(diesel.valor_venda.describe().round(2))
+  with col8:
+   # variável para plotar box 
+   fig_boxplot_diesel = px.box(diesel, y='valor_venda', labels={'valor_venda': 'Valor de Venda'})
+   st.plotly_chart(fig_boxplot_diesel)
+  with col9:
+   st.write('### Etanol')
+   st.dataframe(etanol.valor_venda.describe().round(2))
+  with col10:
+   # variável para plotar box 
+   fig_boxplot_etanol = px.box(etanol, y='valor_venda', labels={'valor_venda': 'Valor de Venda'})
+   st.plotly_chart(fig_boxplot_etanol) 
+  with col11:
+   st.write('### GNV')
+   st.dataframe(gnv.valor_venda.describe().round(2))
+  with col12: 
+   # variável para plotar box 
+   fig_boxplot_gnv = px.box(gnv, y='valor_venda', labels={'valor_venda': 'Valor de Venda'})
+   st.plotly_chart(fig_boxplot_gnv)
   
-  st.write('## Gasolina')
-  st.dataframe(gasolina.valor_venda.describe().round(2))
+  st.write('## Desempenho dos produtos por Estado')
+  st.write('### Gasolina Aditivada')
+  fig_boxplot_gasolina_aditivada_por_estado = px.box(gasolina_aditivada, x='estado', y='valor_venda', labels={'valor_venda': 'Valor de Venda por Estado'}) 
+  st.plotly_chart(fig_boxplot_gasolina_aditivada_por_estado)
   
-  st.write('## Diesel S10')
-  st.dataframe(diesel_s10.valor_venda.describe().round(2))
+  st.write('### Gasolina')
+  fig_boxplot_gasolina_por_estado = px.box(gasolina, x='estado', y='valor_venda', labels={'valor_venda': 'Valor de Venda por Estado'}) 
+  st.plotly_chart(fig_boxplot_gasolina_por_estado)
   
-  st.write('## Diesel')
-  st.dataframe(diesel.valor_venda.describe().round(2))
+  st.write('### Diesel S10')
+  fig_boxplot_diesel_s10_por_estado = px.box(diesel_s10, x='estado', y='valor_venda', labels={'valor_venda': 'Valor de Venda por Estado'}) 
+  st.plotly_chart(fig_boxplot_diesel_s10_por_estado)
   
-  st.write('## Diesel')
-  st.dataframe(diesel.valor_venda.describe().round(2))
-  
-  st.write('## Etanol')
-  st.dataframe(etanol.valor_venda.describe().round(2))
+  st.write('### Diesel')
+  fig_boxplot_diesel_por_estado = px.box(diesel, x='estado', y='valor_venda', labels={'valor_venda': 'Valor de Venda por Estado'}) 
+  st.plotly_chart(fig_boxplot_diesel_por_estado)  
 
-  st.write('## GNV')
-  st.dataframe(gnv.valor_venda.describe().round(2))
+  st.write('### Etanol')
+  fig_boxplot_etanol_por_estado = px.box(etanol, x='estado', y='valor_venda', labels={'valor_venda': 'Valor de Venda por Estado'}) 
+  st.plotly_chart(fig_boxplot_etanol_por_estado) 
   
+  st.write('### GNV')
+  fig_boxplot_gnv_por_estado = px.box(gnv, x='estado', y='valor_venda', labels={'valor_venda': 'Valor de Venda  por Estado'}) 
+  st.plotly_chart(fig_boxplot_gnv_por_estado)
+  
+  st.write('## 1. Produtos mais vendidos 2019 à 2023 (litros)')
+  
+  produtos_contagem = df_anp['produto'].value_counts()
+  
+  fig_produtos_mais_vendidos_litros = px.bar(x=produtos_contagem.values, y=produtos_contagem.index, title = 'Produtos mais vendidos de 2019 à 2023 (litros)', labels={'x': 'Quantidade vendida (litros)', 'y': 'Produto'}, color = produtos_contagem.index, color_continuous_scale=px.colors.sequential.Viridis)
+   
+  st.plotly_chart(fig_produtos_mais_vendidos_litros)
+   
+  st.write('## 2. Protutos mais vendidos 2019 à 2023 (R$)')
+  
+  produtos_valor = df_anp.groupby('produto')['valor_venda'].sum().sort_values(ascending=False)
+  
+  fig_produtos_mais_vendidos_valor = px.bar(x=produtos_valor.values, y=produtos_valor.index, title = 'Produtos mais vendidos de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Produto'}, color = produtos_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
+  
+  st.plotly_chart(fig_produtos_mais_vendidos_valor)
+  
+  st.write('## 3. Produtos mais vendidos por Região 2019 à 2023 (R$)')
+  
+  regiao_valor = df_anp.groupby('regiao')['valor_venda'].sum().sort_values(ascending=False)
+  
+  fig_produto_mais_vendido_por_regiao = px.bar(x=regiao_valor.values, y=regiao_valor.index, title = 'Produtos mais vendidos por Região de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Região'}, color = regiao_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
+  
+  st.plotly_chart(fig_produto_mais_vendido_por_regiao)
+  
+  st.write('## 4. Venda Histórica por Produto')
+  
+  venda_historica = df_anp.pivot_table(values='valor_venda', index='produto', columns='ano', aggfunc='sum', fill_value=0)
+  
+  fig_venda_historica_por_produto = px.imshow(venda_historica, x = ['2019', '2020', '2021', '2022', '2023'], y =  ['DIESEL', 'DIESEL S10', 'ETANOL', 'GASOLINA', 'GASOLINA ADITIVADA', 'GNV'], labels = dict(x='Ano', y='Produto', color='Valor de Venda (R$)'), color_continuous_scale=px.colors.sequential.Viridis, aspect = 'auto', text_auto='True', title = 'Venda Histórica por Produto')
+  
+  st.plotly_chart(fig_venda_historica_por_produto)
+  
+  st.write('## 5. Top 10 Revendas 2019 à 2023')
+  
+
+  revendas_valor = df_anp_revenda.groupby('revenda')['valor_venda'].sum().sort_values(ascending=False).head(10)
+  
+  fig_top_10_revendas = px.bar(x=revendas_valor.values, y=revendas_valor.index, title = 'Top 10 Revendas de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Revenda'}, color = revendas_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
+  
+  st.plotly_chart(fig_top_10_revendas)
+  
+  st.write('## 6. Top 10 Bandeiras que mais venderam 2019 à 2023')
+
+  bandeiras_valor = df_anp.groupby('bandeira')['valor_venda'].sum().sort_values(ascending=False).head(10)
+  
+  fig_top_10_bandeiras = px.bar(x=bandeiras_valor.values, y=bandeiras_valor.index, title = 'Top 10 Bandeiras que mais venderam de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Bandeira'}, color = bandeiras_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
+  
+  st.plotly_chart(fig_top_10_bandeiras)
+  
+  st.write('---')
+
 # Conteúdo da tab Dashboard 
 with tab3:
   st.title('Dashboard')
