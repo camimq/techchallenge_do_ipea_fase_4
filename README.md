@@ -1,9 +1,25 @@
-# techchallenge_do_ipea_fase_4
+# Tech Challenge Ipea | Fase 4 - Curso de Pós-Gradução FIAP em Data Analytics
 
-# 📄 Documentação do código
+Projeto desenvolvido para conclusão do módulo 4 do curso de Pós-Graduação em Data Analytics da FIAP. O projeto consiste em desenvolver um modelo de Machine Learning para prever o preço do barril de petróleo Brent, utilizando dados históricos de preços de fechamento do petróleo.
+
+Além disso, foi criado um dashboard para visualização dos principais dados levantados na análise exploratória, contendo _insights_ relevantes para tomadas de decisões, no cenário de variação do preço do petróleo, dentro do período analisado (2019 à 2023).
+
+## :key: Como Rodar o Projeto
+
+Clone este repositório, acesse a pasta do projeto e siga os passos abaixo:
+
+> No Terminal | 1. Inicia o ambiente virtual
+
+`.\venv/Scripts/activate`
+
+> No terminal | 2. Executa o arquivo principal com Streamlit
+
+`streamlit run Home.py`
+
+## 📄 Documentação do código
 Dentro do projeto, há diversas funções que foram criadas para alcançarmos os objetivos do desafio. Muitas dessas funções são extensas, por isso, ficou definido que a documentação desses códigos deveria ser colocada em um documento apartado, afim de manter o código limpo e organizado, dado que a documentação em questão, por questões pedagógicas é mais detalhada.
 
-## 📢 Arquivo: `1_1. Desenvolvimento.py`
+### 📢 Arquivo: `Desenvolvimento.py`
 Nesta página do projeto, está a parte mais extensa e completa do desenvolvimento do projeto. Nesta página, encontramos os seguintes conteúdos:
 
 1. Sobre os Dados
@@ -12,11 +28,11 @@ Nesta página do projeto, está a parte mais extensa e completa do desenvolvimen
 4. Modelo de Machine Learning
 5. Deploy do Projeto
 
-### Funções de Modelo Machine Learning
+#### Funções de Modelo Machine Learning
 
 **Importante:** Documentação do código, foi gerada com auxílio de Inteligência Artificial.
 
-#### Função def `get_data()`
+##### Função def `get_data()`
 Uma implementação da função _download_ que faz o _download_ de dados de ações da **Yahoo Finance**. A função possui vários parâmetros que permitem personalizar o _download_, como o período de tempo, o intervalo dos dados, a lista de ações a serem baixadas, entre outros. Serve para baixar dados de ações da **Yahoo Finance** de forma programática, permitindo a personalização do período de tempo, o intervalo dos dados e outras opções de _download_.
 
 ```
@@ -31,7 +47,7 @@ def get_data():
     return df
 ```
 
-### Função `def plot_serie_suaviada(df)`
+#### Função `def plot_serie_suaviada(df)`
 
 Esta função personalizada, plota uma temporal suavizada usando suavização exponencial.
 **A função plota duas linhas nos eixos:**
@@ -51,7 +67,7 @@ def plot_serie_suavizada(df):
     st.pyplot(fig)
 ```
 
-### Função `def train_model(df)`
+#### Função `def train_model(df)`
 Esta função treina um modelo de aprendizado de máquina usando uma série temporal de dados financeiro.
 
 **1. Início do treinamento:** exibe uma mensagem, indicando que o treinamento do modelo começou.
@@ -130,7 +146,7 @@ def train_model(df):
     return close_data, close_test, close_train, date_test, date_train, mse, mape, rmse_value, train_generator, test_generator, model, scaler
 ```
 
-### Função `get_features (df, model)`:
+#### Função `get_features (df, model)`:
 A função é projetada para processar dados financeiros e prepará-los para modelagem de séries temporais, além de gerar previsões futuras.
 
 **1. Entrada da Função:**
@@ -175,7 +191,7 @@ def get_features(df, model):
     return close_data, close_test, close_train, date_test, date_train, forecast_dates, forecast, scaler
 ```
 
-### Função `def exibir_metricas(mse, mape, rmse_value)`:
+#### Função `def exibir_metricas(mse, mape, rmse_value)`:
 
 A função `exibir_metricas` é definida para receber três parâmetros: `mse`, `mape`, e `rmse_value`. Ela tem como objetivo exibir métricas de erro de modelos de machine learning ou estatísticos, utilizando o *streamlit*.
 
@@ -192,7 +208,7 @@ def exibir_metricas(mse, mape, rmse_value):
     st.write(f"RMSE: {rmse_value}")
 ```
 
-### Função `def plot_prediction(date_train, date_test, close_train, close_test, model, test_generator)`:
+#### Função `def plot_prediction(date_train, date_test, close_train, close_test, model, test_generator)`:
 
 A função é projetada para visualizar previsões de modelos em comparação com dados reais, especificamente para previsões de preços de petróleo bruto Brent. Ela utiliza a biblioteca Plotly para criar gráficos interativos.
 
@@ -254,7 +270,7 @@ def plot_prediction(date_train, date_test, close_train, close_test, model, test_
     st.plotly_chart(fig)
 ```
 
-### Função `def predict (num_prediction, model, look_back)`:
+#### Função `def predict (num_prediction, model, look_back)`:
 A função predict é projetada para fazer previsões futuras com base em um modelo de aprendizado de máquina fornecido.
 
 **1. Parâmetros da Função:**
@@ -288,7 +304,7 @@ def predict(num_prediction, model, look_back):
     return prediction_list
 ```
 
-# Função `def predict_dates(num_prediction)`:
+#### Função `def predict_dates(num_prediction)`:
 Esta função é projetada para gerar uma lista de datas futuras com base na última data presente em um DataFrame do pandas.
 
 **1. Entrada (`num_prediction`)**: A função recebe um parâmetro `num_prediction`, que especifica o número de datas futuras a serem previstas.
@@ -305,7 +321,7 @@ def predict_dates(num_prediction):
     return prediction_dates
 ```
 
-### Função `def plot_forecast(date_test,close_test,forecast_dates,forecast)`:
+#### Função `def plot_forecast(date_test,close_test,forecast_dates,forecast)`:
 Esta função é projetada para visualizar previsões de séries temporais, especificamente para preços de fechamento de commodities, como o petróleo Brent. 
 
 **1. Parâmetros:**
@@ -351,7 +367,7 @@ def plot_forecast(date_test,close_test,forecast_dates,forecast):
     st.plotly_chart(fig)
 ```
 
-### Função `def teste (df, forecast_date, forecast, scaler)`:
+#### Função `def teste (df, forecast_date, forecast, scaler)`:
 
 Esta função realiza uma série de operações em dados de séries temporais, com o objetivo de preparar e apresentar previsões futuras baseadas em dados passados.
 
@@ -410,7 +426,7 @@ def teste(df, forecast_dates, forecast, scaler):
     return results
 ```
 
-### Função `def_plot predict(df)`
+#### Função `def_plot predict(df)`
 
 A função é projetada para visualizar previsões de dados em um gráfico, utilizando a biblioteca Plotly para a criação do gráfico e Streamlit para a exibição.
 
