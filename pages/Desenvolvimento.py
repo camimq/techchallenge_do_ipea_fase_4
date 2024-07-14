@@ -294,7 +294,7 @@ st.write('''
 look_back = 10
 
 # Configura tabs da página
-tab1, tab2, tab3, tab4, tab5 = st.tabs(['Sore os Dados', 'Análise Exploratória de Dados', 'Dashboard', 'Modelo de Machine Learning', 'Deploy do Projeto'])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(['Sobre os Dados', 'Análise Exploratória de Dados', 'Dashboard', 'Modelo de Machine Learning', 'Deploy do Projeto'])
 
 # Conteúdo da tab Sobre Dados
 with tab1:
@@ -391,7 +391,7 @@ with tab2:
    st.write('### Etanol')
    st.dataframe(etanol.valor_venda.describe().round(2))
   with col10:
-   # variável para plotar box 
+   # variável para plotar box x
    fig_boxplot_etanol = px.box(etanol, y='valor_venda', labels={'valor_venda': 'Valor de Venda'})
    st.plotly_chart(fig_boxplot_etanol) 
   with col11:
@@ -475,12 +475,79 @@ with tab2:
   fig_top_10_bandeiras = px.bar(x=bandeiras_valor.values, y=bandeiras_valor.index, title = 'Top 10 Bandeiras que mais venderam de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Bandeira'}, color = bandeiras_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
   
   st.plotly_chart(fig_top_10_bandeiras)
-  
-  st.write('---')
 
 # Conteúdo da tab Dashboard 
 with tab3:
-  st.title('Dashboard')
+  st.write('''
+            De acordo com as informações coletadas na análise Exploratória de Dados, definimos 6 _insights_ relevantes que auxiliam uma a tomada de decisão de negócio em um cenário de variação de preços do petróleo.
+
+            ## Marcadores econômicos importantes no período de 2019 à 2023         
+           ''')
+  
+  fig_variacao_precos = px.line(df_anp, x='ano', y='valor_venda', color='produto', title='Variação de Preços de Combustíveis de 2019 à 2023', labels={'valor_venda': 'Valor de Venda (R$)', 'ano': 'Ano', 'produto': 'Produto'})
+  st.plotly_chart(fig_variacao_precos)
+  
+  st.write('''
+            De acordo com o gráfico acima, é possível observar que, de maneira geral, os preços dos combustíveis que vinham, entre 2019 e 2020, relativamente estabilizados, à partir da última parte de 2020, começa a subir uma subida vertiginosa até o início de 2023.
+            
+            No início de 2020, iniciou-se o período de pandemia do COVID-19, que impactou diretamente na economia mundial, e consequentemente, no preço do petróleo. Mas, no contexto da pandemia, a demanda por combustível caiu uma vez que as pessoas viviam as restrições de mobilidade que este período trouxe. A partir de 2021, com a retomada da economia e uma demanda reprimida "liberada" para rodar o mercado,  o preço do petróleo voltou a subir.
+            
+            Além da demanda pós-demanda, mais um complicador entrou em cena: em fevereiro de 2022, a Russia invade a Ucrania.
+            
+            [A Russia representa 40% das importações de gás natural da União Europeia](https://www.bbc.com/portuguese/internacional-60673879). Para ajudar, o período da invasão coincidiu com o inverno na Europa; por isso, imediatamente, diversos países europeus passaram a ter problemas imediatos com aquecimento das casas, já que, uma sanção pesada foi imposta à Russia que deixou de exportar o seu gás para diversos países do lado ocidental do mundo, especialmente Europa.
+            
+            Todo este embrólio, fez com que, em 2023, os combustíveis atingissem o pico de valorização. Um cenário que até os dias atuais não se resolveu por completo.
+            
+            ## Produtos mais vendidos de 2019 à 2023
+            
+            No período de 2019 à 2023, o produto com maior demanda é a gasolina. Responsável pelos maiores números de venda em litragem e em valores monetários.
+            
+            **❗ Importante:** A gasolina é seguida pelo diesel em valores negociados, contudo, o Etanol (em volume) é quem segue na segunda posição; com o Diesel aparecendo em terceiro lugar.
+           ''')
+  
+  col1, col2 = st.columns(2)
+  
+  with col1:
+      produtos_contagem = df_anp['produto'].value_counts()
+      fig_produtos_mais_vendidos_litros = px.bar(x=produtos_contagem.values, y=produtos_contagem.index, title = 'Produtos mais vendidos de 2019 à 2023 (litros)', labels={'x': 'Quantidade vendida (litros)', 'y': 'Produto'}, color = produtos_contagem.index, color_continuous_scale=px.colors.sequential.Viridis)
+      
+      st.plotly_chart(fig_produtos_mais_vendidos_litros)
+  with col2: 
+   produtos_valor = df_anp.groupby('produto')['valor_venda'].sum().sort_values(ascending=False)
+   fig_produtos_mais_vendidos_valor = px.bar(x=produtos_valor.values, y=produtos_valor.index, title = 'Produtos mais vendidos de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Produto'}, color = produtos_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
+   
+   st.plotly_chart(fig_produtos_mais_vendidos_valor)
+  
+  st.write('''
+            ## Volume de negociação
+            
+            Como é de se esperar, a região sudeste, dada sua alta concentração populacional, região que produz grande parte da riqueza do país e ser a região onde estão localizadas as principais capitais econômicas; é a região que mais consome combustíveis e isso pode ser mostrado, através do volume monetário negociado no período.
+            
+            ** ❗ O nordeste, embora não seja uma região economicamente tão relevante para o país, em termos de consumo, se coloca em segundo lugar no volume de negociado.**
+           ''')
+  
+  regiao_valor = df_anp.groupby('regiao')['valor_venda'].sum().sort_values(ascending=False)
+  
+  fig_valores_por_regiao = px.bar(x=regiao_valor.values, y=regiao_valor.index, title = 'Volume negociado por Região de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Região'}, color = regiao_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
+  
+  st.plotly_chart(fig_valores_por_regiao)
+  
+  st.write('''
+            Nas tendências de variações anuais das vendas, é possível observar diferentes períodos de altas e baixas, com destaque principal para a gasolina, como o produto mais comercionalizado e **o etanol em sexto lugar**, como o produto menos vendido no período de 2019 à 2023, em termos de valores.
+            
+            ** ❗ Embora o Etanol tenha bom desempenho em vendas, é o produto que indica trazer menor margem de receita**. 
+           ''')
+  venda_historica = df_anp.pivot_table(values='valor_venda', index='produto', columns='ano', aggfunc='sum', fill_value=0)
+  
+  fig_venda_historica_por_produto = px.imshow(venda_historica, x = ['2019', '2020', '2021', '2022', '2023'], y =  ['DIESEL', 'DIESEL S10', 'ETANOL', 'GASOLINA', 'GASOLINA ADITIVADA', 'GNV'], labels = dict(x='Ano', y='Produto', color='Valor de Venda (R$)'), color_continuous_scale=px.colors.sequential.Viridis, aspect = 'auto', text_auto='True', title = 'Venda Histórica por Produto')
+  
+  st.write('''
+            ## Top 10 Revendas 2019 à 2023
+            
+            Os TOP 10 nacional de revendedora, tiveram foco em estratégia de mercado, negócio e análise de desempenho durante os anos monitorados para que pudessem ser líderes em seus mercados.
+            
+            **❗ A prova de que esse tipo de foco é importante, está no líder do _chart_; a [Rede Sim](https://www.simrede.com.br/nossos-negocios), é uma empresa que existe a 38 anos, fundada em Flores da Cunha, no Rio Grande do Sul. Hoje, é a maior rede de postos de combustíveis do país, ainda que, de acordo com os dados, a região Sul do país, ocupe o terceiro lugar em volume monetário negociado.**           
+           ''')
 
 # Conteúdo da tab Modelo de Machine Learning
 with tab4:
