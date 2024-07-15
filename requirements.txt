@@ -1,6 +1,5 @@
 streamlit
 pandas
-pandas.io.sql
 numpy 
 psycopg2 
 sys
