@@ -6,7 +6,6 @@ import streamlit as st
 import pandas as pd
 import pandas.io.sql as sqlio
 import numpy as np
-import psycopg2 as ps
 import sys
 import seaborn as sns
 
