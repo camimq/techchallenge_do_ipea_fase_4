@@ -1,12 +1,9 @@
-streamlit
-pandas
-numpy 
-psycopg2 
-sys
-seaborn
-yfinance 
-matplotlib.pyplot
-matplotlib.dates
-plotly.graph_objects
-plotly.express
-tensorflow
+streamlit==1.36.0
+pandas==2.2.2
+numpy==1.26.4
+psycopg2==2.9.9
+seaborn==0.13.2
+yfinance== 0.2.40
+matplotlib==3.9.1
+plotly==5.22.0
+tensorflow==2.17.0

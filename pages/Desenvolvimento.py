@@ -426,55 +426,6 @@ with tab2:
   st.write('### GNV')
   fig_boxplot_gnv_por_estado = px.box(gnv, x='estado', y='valor_venda', labels={'valor_venda': 'Valor de Venda  por Estado'}) 
   st.plotly_chart(fig_boxplot_gnv_por_estado)
-  
-  st.write('## 1. Produtos mais vendidos 2019 à 2023 (litros)')
-  
-  produtos_contagem = df_anp['produto'].value_counts()
-  
-  fig_produtos_mais_vendidos_litros = px.bar(x=produtos_contagem.values, y=produtos_contagem.index, title = 'Produtos mais vendidos de 2019 à 2023 (litros)', labels={'x': 'Quantidade vendida (litros)', 'y': 'Produto'}, color = produtos_contagem.index, color_continuous_scale=px.colors.sequential.Viridis)
-   
-  st.plotly_chart(fig_produtos_mais_vendidos_litros)
-   
-  st.write('## 2. Protutos mais vendidos 2019 à 2023 (R$)')
-  
-  produtos_valor = df_anp.groupby('produto')['valor_venda'].sum().sort_values(ascending=False)
-  
-  fig_produtos_mais_vendidos_valor = px.bar(x=produtos_valor.values, y=produtos_valor.index, title = 'Produtos mais vendidos de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Produto'}, color = produtos_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
-  
-  st.plotly_chart(fig_produtos_mais_vendidos_valor)
-  
-  st.write('## 3. Produtos mais vendidos por Região 2019 à 2023 (R$)')
-  
-  regiao_valor = df_anp.groupby('regiao')['valor_venda'].sum().sort_values(ascending=False)
-  
-  fig_produto_mais_vendido_por_regiao = px.bar(x=regiao_valor.values, y=regiao_valor.index, title = 'Produtos mais vendidos por Região de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Região'}, color = regiao_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
-  
-  st.plotly_chart(fig_produto_mais_vendido_por_regiao)
-  
-  st.write('## 4. Venda Histórica por Produto')
-  
-  venda_historica = df_anp.pivot_table(values='valor_venda', index='produto', columns='ano', aggfunc='sum', fill_value=0)
-  
-  fig_venda_historica_por_produto = px.imshow(venda_historica, x = ['2019', '2020', '2021', '2022', '2023'], y =  ['DIESEL', 'DIESEL S10', 'ETANOL', 'GASOLINA', 'GASOLINA ADITIVADA', 'GNV'], labels = dict(x='Ano', y='Produto', color='Valor de Venda (R$)'), color_continuous_scale=px.colors.sequential.Viridis, aspect = 'auto', text_auto='True', title = 'Venda Histórica por Produto')
-  
-  st.plotly_chart(fig_venda_historica_por_produto)
-  
-  st.write('## 5. Top 10 Revendas 2019 à 2023')
-  
-
-  revendas_valor = df_anp_revenda.groupby('revenda')['valor_venda'].sum().sort_values(ascending=False).head(10)
-  
-  fig_top_10_revendas = px.bar(x=revendas_valor.values, y=revendas_valor.index, title = 'Top 10 Revendas de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Revenda'}, color = revendas_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
-  
-  st.plotly_chart(fig_top_10_revendas)
-  
-  st.write('## 6. Top 10 Bandeiras que mais venderam 2019 à 2023')
-
-  bandeiras_valor = df_anp.groupby('bandeira')['valor_venda'].sum().sort_values(ascending=False).head(10)
-  
-  fig_top_10_bandeiras = px.bar(x=bandeiras_valor.values, y=bandeiras_valor.index, title = 'Top 10 Bandeiras que mais venderam de 2019 à 2023 (R$)', labels={'x': 'Valor vendido (R$)', 'y': 'Bandeira'}, color = bandeiras_valor.index, color_continuous_scale=px.colors.sequential.Viridis)
-  
-  st.plotly_chart(fig_top_10_bandeiras)
 
 # Conteúdo da tab Dashboard 
 with tab3:
